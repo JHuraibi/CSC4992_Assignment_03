@@ -73,7 +73,6 @@ class Game(GUI):
         """Gets the player's guess. If guess non-alpha or already tried, reattempt. Then stores the guess"""
         # If time: Determine if functions below are unnecessary
         self.guess = self.__guess_helper()
-        print("Recursive ended. Guess stored: {}".format(self.guess))
         
         
     def __guess_helper(self):
