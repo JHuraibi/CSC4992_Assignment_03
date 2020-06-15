@@ -2,34 +2,6 @@
 # Assignment 03
 # Question 01
 
-# -------------------------------------------------------------------------------------------------------------------- #
-
-# Instructions Outline:
-#   [1] Read input file
-#   [2] Pick a word randomly
-#   [3] Scramble random word
-#   [4] Ask player to guess the word
-#   [5] After each round:
-#   	- Give user their points if guessed correctly
-#   	- Ask if use wants to continue or not
-#   	- Start new game (repeat)
-
-# Requirements:
-#   Only use breezypythongui widgets for GUI
-#   Pick the words randomly and display the scrambled words to the player to guess the original ones:
-#  	    - Give the player 3 chances to guess a word, and show the number of guesses left
-#  	    - After each round, ask the player if they want to continue the game
-#  	    - If the guess is correct print “Congratulation, you won!”
-#  	    - If the guess is incorrect, print “Sorry, you didn’t win”, and show the original word.
-#   Display the player’s total score after each play
-#   Display all the information on the game window (No input/output from or to the console)
-#   Provide instant feedback for every interaction
-#   Organize your widgets in a coherent design
-#   All buttons and controllers must work properly
-#   Feel free to make any changes necessary
-
-# -------------------------------------------------------------------------------------------------------------------- #
-
 # PEP8 CURRENTLY NOT BEING FOLLOWED
 
 
@@ -44,13 +16,19 @@ class GUI(EasyFrame):
         self.addLabel(text="Your Guess: ", row=0, column=0)
 
 
-class Game:
+class Game(GUI):
     def __init__(self):
         self.secret_word = None
         self.scrambled_secret_word = None
         self.word_bank = None
+        self.guess = None
+        self.previous_guesses = []
         self.__process_words_file()
         self.__shuffle_words()
+
+    @staticmethod
+    def guess_valid(value_entered):
+        return str(value_entered).isalpha()
     
     def __process_words_file(self):
         """Removes commas from text file. Delimits the words by SPACE and saves as List."""
@@ -72,7 +50,7 @@ class Game:
             # Show a prompt asking for guesses
         else:
             print("No Games Remaining")
-            # Show a prompt asking if user wants to play again or exit
+            # Show a prompt asking if player wants to play again or exit
     
     def __pick_secret_word(self):
         """Pops off the next word from the list"""
@@ -82,22 +60,76 @@ class Game:
         """Scrambles the characters in the secret word"""
         word = list(self.secret_word)                                           # Convert word to List of characters
         
-        random.shuffle(word)                                                    # Randomly move around the letters
+        random.shuffle(word)                                                    # Randomly shuffle around the letters
         word = ''.join(word)                                                    # "Convert" back to a single string
         
         self.scrambled_secret_word = word                                       # Store scrambled version of the word
     
     def games_remaining(self):
+        """Returns whether there are any available games left (i.e. there are words in word_bank)"""
         return len(self.word_bank) > 0
+
+    def get_player_guess(self):
+        """Gets the player's guess. If guess non-alpha or already tried, reattempt. Then stores the guess"""
+        # If time: Determine if functions below are unnecessary
         
+        user_guess = input("Enter Your Guess: ")                                # Get the player's guess
+        
+        self.__record_guess(user_guess)                                         # Save the user's guess attempt
+        valid_guess = self.__has_letters_only(user_guess)                       # Only letters entered?
+        old_guess = self.__guess_already_tried(user_guess)                      # Guess already tried?
+        
+        while not valid_guess & old_guess:
+            if not valid_guess:
+                print("\nInvalid guess. Letters only!", end='\n')               # Alert: Invalid guess
+            if old_guess:
+                print("\nInvalid guess. Letters only!", end='\n')               # Alert: Guess was already tried
+            
+            user_guess = input("Enter Your Guess: ")                            # Reattempt if guess was not valid
+            valid_guess = self.__has_letters_only(user_guess)
+            old_guess = self.__guess_already_tried(user_guess)
+            
+        self.guess = user_guess
+        
+    def __record_guess(self, most_recent_guess):
+        self.previous_guesses.append(most_recent_guess)
+        
+    def __has_letters_only(self, guess):
+        """Returns true if the player's guess only contains letters"""
+        return str(guess).isalpha()
+    
+    def __guess_already_tried(self, guess):
+        """Returns true if the player's guess matches a guess they already attempted"""
+        return guess in self.previous_guesses
+        
+    def guessed_correctly(self, guess):
+        """Returns true if the player's guess was correct (matches the secret word)"""
+        return str(self.guess) == self.secret_word
+
 
 if __name__ == '__main__':
     game = Game()
-    
+
     game.start_game()
-    game.show_scrambled_word()
-    game.get_user_guess()
-    #game.check_if_guess_correct
-    #game.
-    #game.get_user_input()
+    
+    print("Word: {}".format(game.secret_word))
+    game.get_player_guess()
+    if game.guessed_correctly():
+        print("You Win!")
+    
+    # game.play_game()
+    
+    # if not game.games_remaining
+        # go to end game (function with return 0?)
+    # Show score
+    
+    #while guesses remaining
+    while True:
+        game.show_scrambled_word()
+        #Show current score
+        #Show remaining guesses
+        game.get_player_guess()
+        #game.check_if_guess_correct
+            #Deduct from guesses remaining
+            #Print: "Congratz" or "Incorrect"
     
