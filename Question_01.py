@@ -11,9 +11,10 @@ from breezypythongui import EasyFrame
 
 class GUI(EasyFrame):
     def __init__(self):
-        EasyFrame.__init__(self, title="Unscramble the Word")
-        self.addLabel(text="Try to unscramble the word: ", row=0, column=0)
-        self.addLabel(text="Your Guess: ", row=0, column=0)
+        EasyFrame.__init__(self,width = 400, height=200, title="Unscramble the Word")
+        
+    def main():
+        question_01().mainloop()
 
 
 class Game(GUI):
@@ -115,7 +116,7 @@ if __name__ == '__main__':
     # go to end game (function with return 0?)
     while True:
         game.start_game()
-        game.show_scrambled_word()
+        # game.show_scrambled_word()
         #Show remaining guesses
         game.get_player_guess()
         #game.check_if_guess_correct
