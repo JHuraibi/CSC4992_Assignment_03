@@ -8,29 +8,6 @@
 import random
 from breezypythongui import EasyFrame
 
-#readonly
-class GUI(EasyFrame):
-    def __init__(self):
-        EasyFrame.__init__(self,width = 300, height=200, title="Unscramble the Word")
-        # Label and field for the Score
-        self.addLabel(text="Score: ", column=0, row=0)
-        self.fieldScore = self.addIntegerField(value=0, state="readonly", column=1, row=0)
-        
-        # Label and field for the Scrambled Word
-        self.addLabel(text="Scrambled Word: ", column=0, row=1)
-        self.fieldScrambled = self.addTextField(text="", state="readonly", column=1, row=1)
-
-        # Label and field for the Player's Guess Input
-        self.addLabel(text="Your Guess: ", column=0, row=2)
-        self.fieldGuess = self.addTextField(text="", column=1, row=2)
-
-        # Label and field for number of Guesses Remaining
-        self.addLabel(text="Tries Remaining: ", column=0, row=3)
-        self.fieldNumTries = self.addIntegerField(value=0, state="readonly", column=1, row=3)
-        
-    def main():
-        question_01().mainloop()
-
 
 class Game(GUI):
     def __init__(self):
@@ -82,7 +59,7 @@ class Game(GUI):
         """Returns whether there are any available games left (i.e. there are words in word_bank)"""
         return len(self.word_bank) > 0
 
-    def get_player_guess(self):
+    def process_player_guess(self):
         """Gets the player's guess. If guess non-alpha or already tried, reattempt. Then stores the guess"""
         self.guess = self.__guess_helper()
         
@@ -101,6 +78,7 @@ class Game(GUI):
         elif old_guess:
             print("\n\"{}\" was already tried".format(guess))                   # Guess was already tried
             return self.__guess_helper()
+        else:
         else:
             return guess                                                        # (Base Case): Guess is valid
 
@@ -124,6 +102,33 @@ class Game(GUI):
         return str(self.guess) == self.secret_word
 
 
+class GUI(EasyFrame, Game):
+    def __init__(self):
+        EasyFrame.__init__(self, width=300, height=200, title="Unscramble the Word")
+        # Label and field for the Score
+        self.addLabel(text="Score: ", column=0, row=0)
+        self.fieldScore = self.addIntegerField(value=0, state="readonly", column=1, row=0)
+        
+        # Label and field for the Scrambled Word
+        self.addLabel(text="Scrambled Word: ", column=0, row=1)
+        self.fieldScrambled = self.addTextField(text="", state="readonly", column=1, row=1)
+        
+        # Label and field for the Player's Guess Input
+        self.addLabel(text="Your Guess: ", column=0, row=2)
+        self.fieldGuess = self.addTextField(text="", column=1, row=2)
+        
+        # Label and field for number of Guesses Remaining
+        self.addLabel(text="Tries Remaining: ", column=0, row=3)
+        self.fieldNumTries = self.addIntegerField(value=0, state="readonly", column=1, row=3)
+        
+        # Button to Submit Guess
+        self.addButton(text="Check Guess", column=0, row=0, columnspan=1, command=self.process_player_guess)
+    
+    def main():
+        question_01().mainloop()
+        
+        
+
 if __name__ == '__main__':
     game = Game()
     GUI().mainloop()
@@ -135,7 +140,7 @@ if __name__ == '__main__':
         game.start_game()
         # game.show_scrambled_word()
         #Show remaining guesses
-        game.get_player_guess()
+        game.process_player_guess()
         #game.check_if_guess_correct
             #Deduct from guesses remaining
             #Print: "Congratz" or "Incorrect"
