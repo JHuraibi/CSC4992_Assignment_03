@@ -9,7 +9,7 @@ import random
 from breezypythongui import EasyFrame
 
 
-class Game(GUI):
+class GameMechanics(GUI):
     def __init__(self):
         self.word_bank = None
         self.secret_word = None
@@ -79,7 +79,6 @@ class Game(GUI):
             print("\n\"{}\" was already tried".format(guess))                   # Guess was already tried
             return self.__guess_helper()
         else:
-        else:
             return guess                                                        # (Base Case): Guess is valid
 
     @staticmethod
@@ -102,7 +101,7 @@ class Game(GUI):
         return str(self.guess) == self.secret_word
 
 
-class GUI(EasyFrame, Game):
+class GameGUI(EasyFrame, GameMechanics):
     def __init__(self):
         EasyFrame.__init__(self, width=300, height=200, title="Unscramble the Word")
         # Label and field for the Score
@@ -127,11 +126,10 @@ class GUI(EasyFrame, Game):
     def main():
         question_01().mainloop()
         
-        
 
 if __name__ == '__main__':
-    game = Game()
-    GUI().mainloop()
+    game = GameMechanics()
+    GameGUI().mainloop()
     
     #continueGame = game.end_game()
     
