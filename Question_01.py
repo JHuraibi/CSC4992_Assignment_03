@@ -8,10 +8,25 @@
 import random
 from breezypythongui import EasyFrame
 
-
+#readonly
 class GUI(EasyFrame):
     def __init__(self):
-        EasyFrame.__init__(self,width = 400, height=200, title="Unscramble the Word")
+        EasyFrame.__init__(self,width = 300, height=200, title="Unscramble the Word")
+        # Label and field for the Score
+        self.addLabel(text="Score: ", column=0, row=0)
+        self.fieldScore = self.addIntegerField(value=0, state="readonly", column=1, row=0)
+        
+        # Label and field for the Scrambled Word
+        self.addLabel(text="Scrambled Word: ", column=0, row=1)
+        self.fieldScrambled = self.addTextField(text="", state="readonly", column=1, row=1)
+
+        # Label and field for the Player's Guess Input
+        self.addLabel(text="Your Guess: ", column=0, row=2)
+        self.fieldGuess = self.addTextField(text="", column=1, row=2)
+
+        # Label and field for number of Guesses Remaining
+        self.addLabel(text="Tries Remaining: ", column=0, row=3)
+        self.fieldNumTries = self.addIntegerField(value=0, state="readonly", column=1, row=3)
         
     def main():
         question_01().mainloop()
@@ -19,10 +34,11 @@ class GUI(EasyFrame):
 
 class Game(GUI):
     def __init__(self):
+        self.word_bank = None
         self.secret_word = None
         self.scrambled_secret_word = None
-        self.word_bank = None
         self.guess = None
+        self.score = 0
         self.previous_guesses = []
         self.__process_words_file()
         self.__shuffle_words()
@@ -110,6 +126,7 @@ class Game(GUI):
 
 if __name__ == '__main__':
     game = Game()
+    GUI().mainloop()
     
     #continueGame = game.end_game()
     
