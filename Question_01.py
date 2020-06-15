@@ -72,24 +72,25 @@ class Game(GUI):
     def get_player_guess(self):
         """Gets the player's guess. If guess non-alpha or already tried, reattempt. Then stores the guess"""
         # If time: Determine if functions below are unnecessary
+        self.guess = self.__guess_helper()
+        print("Recursive ended. Guess stored: {}".format(self.guess))
         
-        user_guess = input("Enter Your Guess: ")                                # Get the player's guess
         
-        self.__record_guess(user_guess)                                         # Save the user's guess attempt
-        valid_guess = self.__has_letters_only(user_guess)                       # Only letters entered?
-        old_guess = self.__guess_already_tried(user_guess)                      # Guess already tried?
+    def __guess_helper(self):
+        """Recursive method to get player's guess and check if its valid"""
+        guess = input("Enter Your Guess: ")                                     # Get the player's guess
         
-        while not valid_guess & old_guess:
-            if not valid_guess:
-                print("\nInvalid guess. Letters only!", end='\n')               # Alert: Invalid guess
-            if old_guess:
-                print("\nInvalid guess. Letters only!", end='\n')               # Alert: Guess was already tried
-            
-            user_guess = input("Enter Your Guess: ")                            # Reattempt if guess was not valid
-            valid_guess = self.__has_letters_only(user_guess)
-            old_guess = self.__guess_already_tried(user_guess)
-            
-        self.guess = user_guess
+        valid_guess = self.__has_letters_only(guess)                            # Only letters entered?
+        old_guess = self.__guess_already_tried(guess)                           # Guess already tried?
+        
+        if not valid_guess:
+            print("\nInvalid guess. Letters only!")                             # Invalid guess (non-alpha)
+            return self.__guess_helper()
+        elif old_guess:
+            print("\n\"{}\" was already tried".format(guess))                   # Guess was already tried
+            return self.__guess_helper()
+        else:
+            return guess                                                        # (Base Case): Guess is valid
         
     def __record_guess(self, most_recent_guess):
         self.previous_guesses.append(most_recent_guess)
