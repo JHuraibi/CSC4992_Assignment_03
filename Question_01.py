@@ -25,10 +25,6 @@ class Game(GUI):
         self.previous_guesses = []
         self.__process_words_file()
         self.__shuffle_words()
-
-    @staticmethod
-    def guess_valid(value_entered):
-        return str(value_entered).isalpha()
     
     def __process_words_file(self):
         """Removes commas from text file. Delimits the words by SPACE and saves as List."""
@@ -71,12 +67,12 @@ class Game(GUI):
 
     def get_player_guess(self):
         """Gets the player's guess. If guess non-alpha or already tried, reattempt. Then stores the guess"""
-        # If time: Determine if functions below are unnecessary
         self.guess = self.__guess_helper()
-        
         
     def __guess_helper(self):
         """Recursive method to get player's guess and check if its valid"""
+        # If time: Determine if functions below are unnecessary
+        
         guess = input("Enter Your Guess: ")                                     # Get the player's guess
         
         valid_guess = self.__has_letters_only(guess)                            # Only letters entered?
@@ -90,7 +86,11 @@ class Game(GUI):
             return self.__guess_helper()
         else:
             return guess                                                        # (Base Case): Guess is valid
-        
+
+    @staticmethod
+    def guess_valid(value_entered):
+        return str(value_entered).isalpha()
+    
     def __record_guess(self, most_recent_guess):
         self.previous_guesses.append(most_recent_guess)
         
@@ -109,27 +109,18 @@ class Game(GUI):
 
 if __name__ == '__main__':
     game = Game()
-
-    game.start_game()
     
-    print("Word: {}".format(game.secret_word))
-    game.get_player_guess()
-    if game.guessed_correctly():
-        print("You Win!")
+    #continueGame = game.end_game()
     
-    # game.play_game()
-    
-    # if not game.games_remaining
-        # go to end game (function with return 0?)
-    # Show score
-    
-    #while guesses remaining
+    # go to end game (function with return 0?)
     while True:
+        game.start_game()
         game.show_scrambled_word()
-        #Show current score
         #Show remaining guesses
         game.get_player_guess()
         #game.check_if_guess_correct
             #Deduct from guesses remaining
             #Print: "Congratz" or "Incorrect"
+        #Show current score
+
     
