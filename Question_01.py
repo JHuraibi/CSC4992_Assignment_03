@@ -87,12 +87,15 @@ class ScrambledWordGame(EasyFrame):
         self.secret_word = self.word_bank.pop()                                 # Get secret word (and delete from list)
 
     def scramble_word(self):
-        """Scrambles the characters in the secret word"""
-        word = list(self.secret_word)                                           # Convert word to List of characters
-    
-        random.shuffle(word)                                                    # Randomly shuffle around the letters
-        word = ''.join(word)                                                    # "Convert" back to a single string
-    
+        """Scrambles the characters in the secret word.
+        While-Loop will handle off-chance scrambled word is still the same"""
+        word = self.secret_word
+        
+        while word == self.secret_word:
+            word = list(self.secret_word)                                       # Convert word to List of characters
+            random.shuffle(word)                                                # Randomly shuffle around the letters
+            word = ''.join(word)                                                # "Convert" back to a single string
+            
         self.scrambled_secret_word = word                                       # Store scrambled version of the word
 
     def process_player_guess(self):
