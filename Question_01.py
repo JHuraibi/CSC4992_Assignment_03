@@ -65,8 +65,6 @@ class ScrambledWordGame(EasyFrame):
         
         self.word_bank = file_contents.split()                                  # Save as list of individual words
         file_in_stream.close()                                                  # Close the file stream
-        
-        return True
 
     def shuffle_words(self):
         """Randomize the list of words"""
